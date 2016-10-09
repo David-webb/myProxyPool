@@ -6,8 +6,8 @@ import datetime
 # import random
 
 class xiciProxy():
-    def __init__(self, SourcePath, User, Password, databaseName="ProxyPool"):
-        self.databaseName = "ProxyPool"
+    def __init__(self, SourcePath, User, Password, databaseName="ProxyPool2"):
+        self.databaseName = "ProxyPool2"
         self.db = MySQLdb.connect(SourcePath, User, Password, charset='utf8')
         self.cursor = self.db.cursor()
         if databaseName != self.databaseName:
