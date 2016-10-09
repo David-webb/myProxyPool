@@ -7,9 +7,20 @@ import datetime
 
 class xiciProxy():
     def __init__(self, SourcePath, User, Password, databaseName="ProxyPool"):
-        self.db = MySQLdb.connect(SourcePath, User, Password, databaseName, charset='utf8')
+        self.databaseName = "ProxyPool"
+        self.db = MySQLdb.connect(SourcePath, User, Password, charset='utf8')
         self.cursor = self.db.cursor()
-        self.indexCount = 0
+        if databaseName != self.databaseName:
+            print "数据库名称固定为:ProxyPool..."
+        try:
+            self.cursor.execute('use' + ' ' + self.databaseName)
+        except:
+            self.initProxyPoolDatabase()
+        # if self.isDatabaseReady():
+        #     print "数据库已准备好..."
+        #     self.cursor.execute('use ProxyPool2')
+        # else:
+        #     self.initProxyPoolDatabase()
         pass
 
     def __del__(self):
@@ -21,13 +32,14 @@ class xiciProxy():
         sql = 'show databases'
         self.cursor.execute(sql)
         dbList = [x[0] for x in self.cursor.fetchall()]
-        return True if 'ProxyPool' in dbList else False
+        return True if self.databaseName in dbList else False
 
     def initProxyPoolDatabase(self):
         """ 初始化数据库 """
+        print "初始化数据库..."
         # 创建数据库
-        sql = 'create database ProxyPool'
-        self.cursor.execute(sql)
+        self.cursor.execute('CREATE DATABASE IF NOT EXISTS' + ' ' + self.databaseName)
+        self.cursor.execute('use' + ' ' + self.databaseName)
         # 创建XA, WA, CONTROLINFO 三张表
         tableList = ['XiCiNationalAnaymous', 'XiCiWesternAnanymous', 'controlTable']
         for i in tableList:
@@ -39,7 +51,7 @@ class xiciProxy():
         sql = ''
         TablenameList = ['XiCiProxyInfo', 'XiCiNationalAnaymous', 'XiCiNationalTransparent', 'XiCiWesternAnanymous', 'XiCiWesternTransparent', 'XiCiSOCKET']
         if TableName in TablenameList:
-            sql = """CREATE TABLE """ + " " + TableName + """(
+            sql = """CREATE TABLE IF NOT EXISTS""" + " " + TableName + """(
                 countryName varchar(100),
                 ipAddr varchar(50),
                 port varchar(20),
@@ -55,7 +67,7 @@ class xiciProxy():
             """
         elif TableName == "controlTable":
             nowTime = str(datetime.date.today()-datetime.timedelta(weeks=1))
-            sql = """CREATE TABLE CONTROLINFO(
+            sql = """CREATE TABLE IF NOT EXISTS CONTROLINFO(
             poolName varchar(50) primary key,
             startUrl varchar(200),
             lastUpdate datetime default""" + '"' + nowTime + '", ' + """
@@ -204,16 +216,18 @@ if __name__ == '__main__':
     # milliseconds, microseconds, seconds, minutes, hours, days(默认), weeks
     # timeOfNow = tp.getlastDate("XiCiNationalAnaymous") - datetime.timedelta(weeks=1440)
     # print timeOfNow
-    try:
-        db = MySQLdb.connect("localhost", "root", "tw2016941017", charset='utf8')
-    except:
-        print traceback.format_exc()
-    cur = db.cursor()
+
+    # try:
+    #     db = MySQLdb.connect("localhost", "root", "tw2016941017", charset='utf8')
+    # except:
+    #     print traceback.format_exc()
+    # cur = db.cursor()
     # cur.execute('show databases;')
     # cur.execute('create database testDb')
     # cur.execute('drop database testDb')
     # print cur.fetchall()
+
     tp = xiciProxy("localhost", "root", "tw2016941017")
-    print tp.isDatabaseReady()
+    # print tp.isDatabaseReady()
 
     pass
