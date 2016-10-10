@@ -11,7 +11,7 @@ class xiciProxy():
         self.db = MySQLdb.connect(SourcePath, User, Password, charset='utf8')
         self.cursor = self.db.cursor()
         if databaseName != self.databaseName:
-            print "数据库名称固定为:ProxyPool..."
+            print "数据库名称固定为:" + self.databaseName + "..."
         try:
             self.cursor.execute('use' + ' ' + self.databaseName)
         except:
@@ -34,6 +34,22 @@ class xiciProxy():
         dbList = [x[0] for x in self.cursor.fetchall()]
         return True if self.databaseName in dbList else False
 
+    def initControlTable(self):
+        ConList = [
+            ['XiCiNationalAnaymous', 'http://www.xicidaili.com/nn/1', 'http://www.xicidaili.com/nn/1'],
+            ['XiCiWesternAnanymous', 'http://www.xicidaili.com/wn/1', 'http://www.xicidaili.com/wn/1']
+        ]
+        sql = 'INSERT IGNORE INTO CONTROLINFO(poolName, startUrl, nextUrl) VALUE(%s, %s, %s)'
+        try:
+            self.cursor.executemany(sql, ConList)
+            self.db.commit()
+            return True
+        except:
+            print "初始化控制信息表失败!"
+            self.db.rollback()
+            return False
+        pass
+
     def initProxyPoolDatabase(self):
         """ 初始化数据库 """
         print "初始化数据库..."
@@ -44,6 +60,7 @@ class xiciProxy():
         tableList = ['XiCiNationalAnaymous', 'XiCiWesternAnanymous', 'controlTable']
         for i in tableList:
             self.CreateTable(i)
+        self.initControlTable()
         pass
 
     def CreateTable(self, TableName='XiCiProxyInfo'):
