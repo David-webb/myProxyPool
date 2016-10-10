@@ -56,14 +56,11 @@ class TestProxyIp(threading.Thread):
                     return False
                 print 'get'
                 return Proxyip
-            # print res.text, res.status_code
             else:
                 print 'pass'
                 return False
         except Exception as e:
             print "timeout"
-            # print e
-            # print traceback.format_exc()
             return False
         pass
     pass
@@ -205,29 +202,14 @@ class runningPool():
         print "耗时:", (endTime - starttime)
         pass
 
-if __name__ == "__main__":
-    # 单线程测试
-    # starttime = datetime.datetime.now()
-    # tp = runningPool("localhost", "root", "tw2016941017", "ProxyPool")
-    # print tp.getUsefulIpPool()
-    # endTime = datetime.datetime.now()
-    # print (endTime - starttime)
-
-    # 多线程测试
-    # starttime = datetime.datetime.now()
-    # tp = runningPool("localhost", "root", "tw2016941017", "ProxyPool")
-    # tp.multiProcessTest(20)
-    # endTime = datetime.datetime.now()
-    # print (endTime - starttime)
-    # print "获得的代理集合:", freshPool
-
-    # 定义操作对象
-    tp = runningPool("localhost", "root", "tw2016941017", "ProxyPool", National=True, highLevel=True, timeout=10)
-    # 多线程
-    tp.run()
-    print tp.pool
-    # 单线程
-    # tp.run('S')
+# if __name__ == "__main__":
+#     # 定义操作对象
+#     tp = runningPool("localhost", "root", "tw2016941017", "ProxyPool", National=True, highLevel=True, timeout=10)
+#     # 多线程
+#     tp.run()
+#     print tp.pool
+#     # 单线程
+#     # tp.run('S')
 
 
     pass

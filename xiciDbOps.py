@@ -3,7 +3,6 @@ __author__ = 'Tengwei'
 import MySQLdb
 import traceback
 import datetime
-# import random
 
 class xiciProxy():
     def __init__(self, SourcePath, User, Password, databaseName="ProxyPool2"):
@@ -16,25 +15,23 @@ class xiciProxy():
             self.cursor.execute('use' + ' ' + self.databaseName)
         except:
             self.initProxyPoolDatabase()
-        # if self.isDatabaseReady():
-        #     print "数据库已准备好..."
-        #     self.cursor.execute('use ProxyPool2')
-        # else:
-        #     self.initProxyPoolDatabase()
         pass
 
     def __del__(self):
+        """ 析构函数 """
         self.cursor.close()
         self.db.commit()
         pass
 
     def isDatabaseReady(self):
+        """ 判断数据库是否准备好 """
         sql = 'show databases'
         self.cursor.execute(sql)
         dbList = [x[0] for x in self.cursor.fetchall()]
         return True if self.databaseName in dbList else False
 
     def initControlTable(self):
+        """ 初始化数据库控制表 """
         ConList = [
             ['XiCiNationalAnaymous', 'http://www.xicidaili.com/nn/1', 'http://www.xicidaili.com/nn/1'],
             ['XiCiWesternAnanymous', 'http://www.xicidaili.com/wn/1', 'http://www.xicidaili.com/wn/1']
@@ -198,53 +195,3 @@ class xiciProxy():
             return False
             pass
 
-
-if __name__ == '__main__':
-    # tp = xiciProxy("localhost", "root", "tw2016941017", "ProxyPool")
-    # tp.CreateTable()
-    # sql = 'select * from XiCiProxyInfo limit 1;'
-    # tp.cursor.execute(sql)
-    # tmpstr = tp.cursor.fetchone()[9]
-    # import datetime
-    # t1 = datetime.datetime.strptime("16-08-29 16:02", "%y-%m-%d %H:%M")  # 16-08-29 16:02
-    # t2 = datetime.datetime.strptime("16-09-29 16:02", "%y-%m-%d %H:%M")  # 16-08-29 16:02
-    # print t2 - t1
-
-    # import datetime
-    # print datetime.datetime.now()
-    # print tp.getoneIpProxy(datetime.datetime.now())
-    # print tp.getoneIpfromProxyPool()
-    # for i in ['XiCiNationalTransparent', 'XiCiWesternAnanymous', 'XiCiWesternTransparent', 'XiCiSOCKET']:
-    #     tp.CreateTable(i)
-
-    # tp.CreateTable('XiCiNationalAnaymous')
-
-    # print tp.getControlInfo()
-    # print tp.getlastDate()
-    # tp.writebackSetup("", "", "")
-    # print tp.getSetUpData()
-    # tp.writebackSetup("XiCiProxyInfo", tp.getlastDate(), "http://www.xicidaili.com/nn/2")
-
-    # print tp.getFreshIpfromProxyPool("XiCiNationalAnaymous", 1)
-
-    # tp = xiciProxy("localhost", "root", "tw2016941017", "ququDB")
-    # tp.CreateTable('controlTable')
-
-    # milliseconds, microseconds, seconds, minutes, hours, days(默认), weeks
-    # timeOfNow = tp.getlastDate("XiCiNationalAnaymous") - datetime.timedelta(weeks=1440)
-    # print timeOfNow
-
-    # try:
-    #     db = MySQLdb.connect("localhost", "root", "tw2016941017", charset='utf8')
-    # except:
-    #     print traceback.format_exc()
-    # cur = db.cursor()
-    # cur.execute('show databases;')
-    # cur.execute('create database testDb')
-    # cur.execute('drop database testDb')
-    # print cur.fetchall()
-
-    tp = xiciProxy("localhost", "root", "tw2016941017")
-    # print tp.isDatabaseReady()
-
-    pass

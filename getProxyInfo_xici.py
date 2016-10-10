@@ -85,9 +85,6 @@ class ParsePage():
         if res.status_code == 200:
             print '正在解析"' + pageUrl + '...'
             tmpText = res.text
-            # 临时保存网页, 用于测试
-            # with open("tmp.txt", 'r') as rd:
-            #     tmpText = rd.read()
             soup = BeautifulSoup(tmpText, 'html.parser')
 
             # 获得下一页的url
@@ -142,7 +139,6 @@ class ParsePage():
                 "lastUpdate": str(ConData[2]),
                 "nextUrl": ConData[3]
             }
-            # print tmpDict
             with open('xiciSetup.txt', 'w') as wr:
                 wr.write(json.dumps(tmpDict))
             return True
@@ -185,18 +181,13 @@ class CreateProxyPool(ParsePage):
                     self.wirteBkToDb(pageUrl)
                     return True
             else:
-                # 这里的"ip信息插入失败和控制信息写回" 没有真正做到原子操作(多线程情况),
-                # 用mysql事物改进 !!!!
                 print "插入数据失败!"
-                # ParsePage.writeBack(self, pageUrl)
                 self.wirteBkToDb(pageUrl)
                 return False
         else:
             print "解析失败,返回重启..."
-            # ParsePage.writeBack(self, pageUrl)
             self.wirteBkToDb(pageUrl)
             return False
-            # print nextUrl if nextUrl!=None else 'ops'
 
     def run(self, mode='start'):
         """
@@ -273,18 +264,14 @@ class UpdateProxyPool(ParsePage):
                         self.UpdatePool(nextUrl)
                     else:
                         print "更新完毕!"
-                        # ParsePage.writeBack(self, str(self.dboperator.getlastDate(self.poolName)), 'lastUpdate')
                         self.wirteBkToDb(url)
                         return True
                 else:
                     print "更新数据时插入数据失败!"
-                    # ParsePage.writeBack(self, url)
                     self.wirteBkToDb(url)
                     return False
-                # writebackSetup(self, dbObj, poolName, lastUpdate, nextUrl)
         else:
             print "解析失败,返回重启..."
-            # ParsePage.writeBack(self, pageUrl)
             self.wirteBkToDb(url)
             return False
     pass
@@ -300,75 +287,16 @@ class UpdateProxyPool(ParsePage):
 
 
 
-
-if __name__ == "__main__":
-    # tp = getXiCiProxyInfo("localhost", "root", "tw2016941017", "ProxyPool")
-    # tp.parseThePage(tp.readfromsetup()['startUrl'])
-
-    # tp = getXiCiProxyInfo("localhost", "root", "tw2016941017", "ProxyPool")
-    # tp.UpdatePool()
-
-    # import sys
-    # print sys.getdefaultencoding()
-
-    # t1 = datetime.datetime.strptime("2016-09-11 12:00:00", "%Y-%m-%d %H:%M:%S")
-    # t2 = datetime.datetime.strptime("16-09-10 12:00", "%y-%m-%d %H:%M")
-    # print (t2 > t1)
-
-    # tp = getXiCiProxyInfo("localhost", "root", "tw2016941017", "ProxyPool")
-    # count = 0
-    # while(count < 3):
-    #     # proxyIp = tp.dboperator.getoneIpfromProxyPool()
-    #     # print proxyIp
-    #     # res = requests.get("http://httpbin.org/ip",  proxies={proxyIp[2].lower(): proxyIp[0] + ":" + proxyIp[1]})
-    #     res = requests.get("http://httpbin.org/ip",  proxies={"http": "61.49.254.15:81"})
-    #     print res.text
-    #     time.sleep(3)
-    #     count += 1
-
-
-    # tp = getXiCiProxyInfo("localhost", "root", "tw2016941017", "ProxyPool")
-    # tp.createThePool(tp.readfromsetup()['startUrlofWN'])
-    # tp.createThePool(tp.readfromsetup()['nextUrl'])
-    # tp.createThePool(tp.readfromsetup()['startUrlofWT'])
-    # tp.createThePool(tp.readfromsetup()['nextUrl'])
-    # tp.createThePool(tp.readfromsetup()['startUrlofNT'])
-    # tp.createThePool(tp.readfromsetup()['nextUrl'])
-    # tp.createThePool(tp.readfromsetup()['startUrlofWT'])
-    # tp.createThePool(tp.readfromsetup()['nextUrl'])
-    # tp.createThePool(tp.readfromsetup()['startUrlofQQ'])
-    # tp.createThePool(tp.readfromsetup()['nextUrl'])
-
-
-    # tp = UpdateProxyPool("localhost", "root", "tw2016941017", "ProxyPool", "XiCiProxyInfo")
-    # tp.UpdatePool()
-
-    # tp = CreateProxyPool("localhost", "root", "tw2016941017", "ProxyPool", "XiCiNationalAnaymous")
-    # tp.run('restart')
-    # tp = UpdateProxyPool("localhost", "root", "tw2016941017", "ProxyPool", "XiCiNationalAnaymous")
-    # tp.run()
-
-    # tp = CreateProxyPool("localhost", "root", "tw2016941017", "ProxyPool", "XiCiWesternAnanymous")
-    # tp.run()
-    # tp.run('restart')
-    # tp = UpdateProxyPool("localhost", "root", "tw2016941017", "ProxyPool", "XiCiWesternAnanymous")
-    # tp.run()
-
-    # tp = CreateProxyPool("localhost", "root", "tw2016941017", "ProxyPool", "XiCiSOCKET")
-    # tp.run()
-    # tp.run('restart')
-    # tp = UpdateProxyPool("localhost", "root", "tw2016941017", "ProxyPool", "XiCiSOCKET")
-    # tp.run()
-
-    # tp = CreateProxyPool("localhost", "root", "tw2016941017", "ProxyPool", "XiCiNationalTransparent")
-    # tp.run()
-    # tp.run('restart')
-    # tp = UpdateProxyPool("localhost", "root", "tw2016941017", "ProxyPool", "XiCiNationalTransparent")
-    # tp.run()
-
-    # tp = CreateProxyPool("localhost", "root", "tw2016941017", "ProxyPool", "XiCiWesternTransparent")
-    # tp.run()
-    # tp.run('restart')
-    # tp = UpdateProxyPool("localhost", "root", "tw2016941017", "ProxyPool", "XiCiWesternTransparent")
-    # tp.run()
-    pass
+    
+# if __name__ == "__main__":
+#     # tp = CreateProxyPool("localhost", "root", "tw2016941017", "ProxyPool", "XiCiNationalAnaymous")
+#     # tp.run('restart')
+#     # tp = UpdateProxyPool("localhost", "root", "tw2016941017", "ProxyPool", "XiCiNationalAnaymous")
+#     # tp.run()
+#
+#     # tp = CreateProxyPool("localhost", "root", "tw2016941017", "ProxyPool", "XiCiWesternAnanymous")
+#     # tp.run()
+#     # tp.run('restart')
+#     # tp = UpdateProxyPool("localhost", "root", "tw2016941017", "ProxyPool", "XiCiWesternAnanymous")
+#     # tp.run()
+#     pass
