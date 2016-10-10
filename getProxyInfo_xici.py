@@ -287,7 +287,7 @@ class UpdateProxyPool(ParsePage):
 
 
 
-    
+
 # if __name__ == "__main__":
 #     # tp = CreateProxyPool("localhost", "root", "tw2016941017", "ProxyPool", "XiCiNationalAnaymous")
 #     # tp.run('restart')
