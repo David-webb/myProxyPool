@@ -6,27 +6,21 @@
 ## 接口(python)
 1. 模块介绍:
 	+ 名称: UsefulProxyPool
-	+ 导入: from UsefulProxyPool import runningPool
-	+ 使用:
+	+ 导入: from mainProcess import *
+ 	+ 使用:
 
-			tp = runningPool(
-			SourcePath, 		# 数据库所在主机的ip
+			tp = Timer_ProxyPool(
+			Host, 			# 数据库所在主机的ip
 			User, 			# 数据库用户名
 			Password,		# 数据库密码
 			databaseName, 		# 数据库名称(可省, 程序指定为ProxyPool2)
 			National=True, 		# 国内代理的标志
-			highLevel=True, 		# 高匿代理的标志
+			highLevel=True, 	# 高匿代理的标志
 			timeout=10)		# 超时设置
 			)
 
-			tp.run(
-			mode='M', 		# 验证模式:单线程('S') / 多线程('M')
-			multiNum=10, 		# 多线程模式下, 设置多线程的个数, 默认: 10个
-			timeRange=2880	# 指定提取该时间范围内代理, 单位:分钟, 默认: 2880 分钟(两天内)
-			)
-
-			print tp.pool        	# 提取到的代理ip池, 集合(set)类型
-
+			tp.getOneProxyIp()	# 从数据库获取一个ip
+						# 返回值是字符串，直接用
 
 ## 安装说明
 1. 系统环境:
@@ -52,5 +46,5 @@
 5. 后续开发:
 	+ 添加更多的提取源, 能够同时提供更多的代理
 	+ 提供国外的高匿代理
-
-
+	+ 分布式的验证，提高验证效率，保证验证数量
+	+ 安装包的标准化和接口结构的优化
