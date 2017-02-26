@@ -4,6 +4,7 @@ __author__ = "TengWei"
 import threading
 import time
 import os
+from  UsefulProxyPool import *
 
 # instance 2
 class Timer(threading.Thread):
@@ -46,16 +47,39 @@ class Timer(threading.Thread):
         if self.lastDo:
             self.__do()
 
+class Timer_ProxyPool():
+    def __init__(self, Host, UserName, pwd, dbName, National=True, highLevel=True, timeout=10, timeRange=5760):
+        self.Host = Host
+        self.UserName = UserName
+        self.pwd = pwd
+        self.dbName = dbName 
+        self.National = National
+        self.highLevel = highLevel
+        self.timeout = timeout        
+        self.tp = runningPool(Host, UserName, pwd, dbName, National=True, highLevel=True, timeout=10)
+        self.timeRange = timeRange
+        pass
 
-def easyprint(Msg):
-    print Msg
+    def easyprint(self, Msg):
+        print Msg
 
-def runproxypool():
-    os.system("python UsefulProxyPool.py")    
+    def runproxypool(self):
+        self.tp.run('M', timeRange=self.timeRange)
+        #os.system("python UsefulProxyPool.py")    
+
+    def startProxyPool(self, cycleTime=60):
+        t = Timer(self.runproxypool, sleep=cycleTime)
+        t.run()
+
+    def getOneProxyIP(self):
+        tmpIp = self.tp.dbop.getOneUsefulProxyIp()
+        return tmpIp[0]
+
 
 if __name__ == '__main__':
-    t = Timer(runproxypool, sleep=60)
-    t.run()
+    Timer_p = Timer_ProxyPool("localhost", "root", "tw2016941017", "ProxyPool")
+    Timer_p.startProxyPool()
+    
     
     #import  datetime
     #tmpset = set([(u'111.76.133.16:808', datetime.datetime(2017, 1, 26, 20, 43)), (u'36.249.192.240:8118', datetime.datetime(2017, 1, 26, 20, 10)), (u'117.79.93.39:8808', datetime.datetime(2017, 1, 25, 18, 31)), (u'61.159.12.31:8118', datetime.datetime(2017, 1, 26, 20, 42)), (u'60.13.74.211:80', datetime.datetime(2017, 1, 26, 21, 10)), (u'60.169.78.218:808', datetime.datetime(2017, 1, 26, 2, 46))])

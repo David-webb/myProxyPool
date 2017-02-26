@@ -227,17 +227,41 @@ class xiciProxy():
             return False
             pass
 
+    def getOneUsefulProxyIp(self):
+        sql = 'select ipAddr, lastTest from USEFULPROXY order by lastTest desc limit 1;'
+        sql2 = 'delete from USEFULPROXY where ipAddr="%s" and lastTest="%s"'
+        try:
+            self.cursor.execute(sql)
+            tmpIp =  self.cursor.fetchone()
+            sql2 = sql2 % (tmpIp[0], tmpIp[1])
+            self.cursor.execute(sql2)
+            self.db.commit()
+            # print "获取成功:", tmpIp
+            return tmpIp
+        except:
+            self.db.rollback()
+            print traceback.format_exc()
+            print "获取失败......"
+            return False
+
+
+
 if __name__ == '__main__':
     #import requests
     #res = requests.get('https://www.baidu.com', proxies={'http': 'http://115.59.69.59:808'})
     #print res.status_code
     #print res.text
 
+    """
     import datetime
     tmpobj = xiciProxy("localhost", "root", "tw2016941017", "ProxyPool")
     tmplist = list(set([(u'111.76.133.16:808', datetime.datetime(2017, 1, 26, 20, 43)), (u'36.249.192.240:8118', datetime.datetime(2017, 1, 26, 20, 10)), (u'117.79.93.39:8808', datetime.datetime(2017, 1, 25, 18, 31)), (u'61.159.12.31:8118', datetime.datetime(2017, 1, 26, 20, 42)), (u'60.13.74.211:80', datetime.datetime(2017, 1, 26, 21, 10)), (u'60.169.78.218:808', datetime.datetime(2017, 1, 26, 2, 46))]))
     tmplist = [[x[0], str(x[1])] for x in tmplist]
     print tmplist
     tmpobj.InsertUsefulIp(tmplist)
+    """
     
+    tmpobj = xiciProxy("localhost", "root", "tw2016941017", "ProxyPool")
+    print tmpobj.getOneUsefulProxyIp()
+
     pass
